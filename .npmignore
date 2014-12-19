@@ -1,0 +1,8 @@
+node_modules/*
+bower_components/*
+css/*
+javascripts/*
+build/*
+dist/*
+*.html
+tmp

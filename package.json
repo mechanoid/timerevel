@@ -1,0 +1,30 @@
+{
+  "name": "timerevel",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "dependencies": {
+    "ecstatic": "*",
+    "gulp": "*",
+    "gulp-coffee": "*",
+    "gulp-concat": "*",
+    "gulp-copy": "*",
+    "gulp-gh-pages": "*",
+    "gulp-google-cdn": "*",
+    "gulp-jade": "*",
+    "gulp-livereload": "*",
+    "gulp-print": "*",
+    "gulp-stylus": "*",
+    "gulp-util": "*",
+    "gulp-watch": "*",
+    "jeet": "*",
+    "nib": "*",
+    "rimraf": "*",
+    "rupture": "*",
+    "through2": "*"
+  }
+}
