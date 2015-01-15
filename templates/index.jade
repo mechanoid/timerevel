@@ -1,11 +1,22 @@
 doctype html
 html
   include ./includes/head.jade
-  body
+  
     
-    div.timetable(
-      data-month="1"
-      data-year="2014"
+  body
+    section(
+      data-ng-app="timerevel"
+      data-ng-controller="timerevelController"
     )
+      h1
+        | Timerevel 
+        span(data-ng-bind="timerevel.version")
+          
+      section.sheets
+        tr-sheet(
+          data-month="1"
+          data-ng-controller="sheetController"
+        )
+          
     
     include ./includes/script-tags.jade

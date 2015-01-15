@@ -3,6 +3,8 @@
   var gulp = require("gulp");
   var gutil = require("gulp-util");
   var through = require("through2");
+  var cson = require("cson");
+
 
   var jade = require("gulp-jade");
 
@@ -12,6 +14,7 @@
   };
 
   var gulpPlugin = function(){
+    // , locals: { data: parsedData }
     return through.obj(streamFunction)
     .pipe(jade({pretty: true}).on('error', gutil.log))
   }

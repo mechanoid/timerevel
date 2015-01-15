@@ -36,8 +36,8 @@ gulp.task('stylus', function(){
 });
 
 
-gulp.task('coffee', function () {
-  gulp.src(['./coffeescript/libs/*.coffee', './coffeescript/app.coffee'])
+gulp.task('coffee', ['views'], function () {
+  gulp.src(['./coffeescript/libs/**/*.coffee', './coffeescript/app.coffee'])
   .pipe(jspreprocessing())
   .pipe(concat('app.js'))
   .pipe(gulp.dest('./javascripts/'));
@@ -52,9 +52,16 @@ gulp.task('vendor-dependencies', function () {
 
 
 gulp.task('templates', function() {
-  gulp.src('./templates/*.jade')
+  gulp.src(['./templates/*.jade', './views/**/*.jade'])
   .pipe(htmlpreprocessing())
   .pipe(gulp.dest('./'));
+});
+
+
+gulp.task('views', function() {
+  gulp.src(['./views/**/*.jade'])
+  .pipe(htmlpreprocessing())
+  .pipe(gulp.dest('./views/'));
 });
 
 
@@ -98,7 +105,8 @@ gulp.task('watch', function() {
 
   gulp.watch(__dirname + '/**/*.styl', ['stylus']).on('change', livereload.changed);
   gulp.watch(__dirname + '/**/*.coffee', ['coffee']).on('change', livereload.changed);
-  gulp.watch(__dirname + '/**/*.jade', ['templates']).on('change', livereload.changed);
+  gulp.watch(__dirname + '/templates/**/*.jade', ['templates']).on('change', livereload.changed);
+  gulp.watch(__dirname + '/views/**/*.jade', ['views']).on('change', livereload.changed);
 });
 
 gulp.task('createServer', function() {

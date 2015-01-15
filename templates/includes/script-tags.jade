@@ -1,8 +1,15 @@
 //- leave those script tags in an absolute path, because they are replaced with a cdn link in deployment
+//- script(src='/bower_components/jquery/dist/jquery.js')
+script(src='/bower_components/lodash/dist/lodash.js')
 script(src='/bower_components/jquery/dist/jquery.js')
+script(src='/bower_components/pouchdb/dist/pouchdb.js')
+//- script(src='/bower_components/rivets/dist/rivets.bundled.min.js')
+script(src='/bower_components/angular/angular.js')
+script(src='/bower_components/angular-pouchdb/dist/angular-pouchdb.js')
 
 //- vendor dependencies
 //- script(src='./javascripts/dependencies.js')
   
-//- main js file
-script(src='./javascripts/app.js')
+//- main js content piped into script tag
+script(src='/javascripts/app.js')
+  

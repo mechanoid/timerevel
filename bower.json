@@ -1,0 +1,25 @@
+{
+  "name": "timerevel",
+  "version": "0.0.0",
+  "authors": [
+    "Falk Hoppe <falkhoppe81@gmail.com>"
+  ],
+  "description": "simple erp avoiding software ;)",
+  "main": "gulpfile.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "pouchdb": "~3.2.1",
+    "angular": "~1.3.8",
+    "angular-pouchdb": "angular-pouchdb/angular-pouchdb#~1.0.2",
+    "lodash": "~2.4.1"
+  }
+}
