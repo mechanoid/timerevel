@@ -1,5 +1,9 @@
-table()
-  tr(ng-data-repeat="entry in entries")
+table.sheet-data-table
+  tr.sheet-data-table-col(data-ng-repeat="row in combinedRows")
     td
-      | {{fubar}}
+      button(data-ng-click="newEntry")
+        | new
+    td {{row.date|date}}
+    td {{row.entry.project}}
+      
     

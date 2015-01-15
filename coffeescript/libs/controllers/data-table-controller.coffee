@@ -12,16 +12,21 @@ angular.module('dataTableController', [])
     begin = new Date(begin)
     end = new Date(end)
     dayLength = end.getDate() - begin.getDate()
-    range = (new Date(begin.getFullYear(), begin.getMonth(), day) for day in [1..31] when day < dayLength)
+    range = ({date: new Date(begin.getFullYear(), begin.getMonth(), day)} for day in [1..31] when day < dayLength)
 
 
   combineRows = (dateRows, entries) ->
     resultRows = []
-    for date in dateRows
-      # entryRows = (entry for entry in entries when new Date(entry.date) is date)
-      for entry in entries
-        console.log +(new Date(entry.date)) is +service/PrivateCustomerRegistrationProcessService.groovy(date)
+    for row in dateRows
+      entryRows = ({date: entry.date, entry: entry} for entry in entries when +(new Date(entry.date)) is +(row.date))
       # console.log entryRows
+
+      if entryRows.length > 0
+        resultRows.push row for row in entryRows
+      else
+        resultRows.push row
+    resultRows
+
 
   entries = [
     project: "Fubar"
@@ -32,7 +37,5 @@ angular.module('dataTableController', [])
   ]
 
   currentDateRows = dateRows($scope.sheet.startDate, $scope.sheet.endDate)
-  combinedRows = combineRows(currentDateRows, entries)
 
-  $scope.entries = entries
-  $scope.rows = combinedRows
+  $scope.combinedRows = combineRows(currentDateRows, entries)
