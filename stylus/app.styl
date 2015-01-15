@@ -10,3 +10,23 @@ tr.readonly
 
 .timetable
   border 1px solid red
+
+
+.sheet-data-table
+  sheet-border-color = #d5cbc1
+
+  border 1px solid sheet-border-color
+
+  td
+    padding-left 1em
+    padding-right 1em
+    border-bottom 1px solid sheet-border-color
+    border-right 1px solid sheet-border-color
+
+    &:last-of-type
+      border-right none
+
+
+  .sheet-data-table-row:last-of-type
+    td
+      border-bottom none
