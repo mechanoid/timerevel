@@ -17,7 +17,14 @@ tr.readonly
 
   border 1px solid sheet-border-color
 
-  td
+  tr.weekend
+    background-color #1ca8d2
+
+  th
+    background-color #898984
+    color #fff
+
+  td, th
     padding-left 1em
     padding-right 1em
     border-bottom 1px solid sheet-border-color
@@ -28,5 +35,5 @@ tr.readonly
 
 
   .sheet-data-table-row:last-of-type
-    td
+    td, th
       border-bottom none
