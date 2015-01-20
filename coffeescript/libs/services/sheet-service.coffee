@@ -1,4 +1,4 @@
-angular.module('SheetService', ['pouchdb', 'DbService'])
+angular.module('SheetService', ['DbService'])
 .factory 'sheets', (db) ->
   class TrSheets
 

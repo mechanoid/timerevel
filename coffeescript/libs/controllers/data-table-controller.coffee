@@ -1,4 +1,4 @@
-angular.module('dataTableController', [])
+angular.module('DataTableController', [])
 
 .directive 'trTable', (sheets) ->
   {
@@ -19,7 +19,6 @@ angular.module('dataTableController', [])
     resultRows = []
     for row in dateRows
       entryRows = ({date: entry.date, entry: entry} for entry in entries when +(new Date(entry.date)) is +(row.date))
-      # console.log entryRows
 
       if entryRows.length > 0
         resultRows.push row for row in entryRows
@@ -27,7 +26,7 @@ angular.module('dataTableController', [])
         resultRows.push row
     resultRows
 
-
+  # console.log $scope.sheet
   entries = [
     project: "Fubar"
     date: new Date(2015, 0, 1)

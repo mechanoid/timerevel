@@ -2,8 +2,9 @@
   app = angular.module 'timerevel', [
     'DbService'
     'SheetService'
-    'dataSheetController'
-    'dataTableController'
+    'EntryService'
+    'DataSheetController'
+    'DataTableController'
   ]
 
   app.controller 'timerevelController', ($scope, $rootScope) ->

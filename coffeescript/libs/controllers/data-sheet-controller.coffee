@@ -1,4 +1,4 @@
-angular.module('dataSheetController', [])
+angular.module('DataSheetController', [])
 
 .directive 'trSheet', ->
   {

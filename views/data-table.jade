@@ -4,6 +4,7 @@ table.sheet-data-table
       button(data-ng-click="newEntry")
         | new
     td {{row.date|date}}
-    td {{row.entry.project}}
+    td 
+      input(value="{{row.entry.project}}")
       
     
