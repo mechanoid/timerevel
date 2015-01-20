@@ -1,13 +1,26 @@
+entryDuration = (entry) ->
+  oneHour = 60 * 60 * 1000
+  if entry? and entry.end? and entry.begin? and entry.break?
+    (((entry.end.getTime() - entry.begin.getTime()) / oneHour)) - entry.break
+  else
+    0
+
 angular.module('DataTableController', ['EntryService', 'uuid'])
-.filter 'workingHours', ->
-  (entry) ->
-    oneHour = 60 * 60 * 1000
+.filter 'workingHours', -> entryDuration
+.filter 'monthlyHours', ->
+  (entries) ->
+    _.reduce entries,
+    ((result, entry) ->
+      result += entryDuration(entry)),
+    0
 
-    if entry.end? and entry.begin? and entry.break?
-      (((entry.end.getTime() - entry.begin.getTime()) / oneHour))
-    else
-      0
-
+.filter 'overtime', ->
+  (entries, date) ->
+    dayEntries = (entry for entry in entries when +(entry.date) is +date)
+    _.reduce dayEntries,
+    ((result, entry) ->
+      result + entryDuration(entry)),
+    -8
 
 .directive 'trTable', (sheets) ->
   {
@@ -52,14 +65,6 @@ angular.module('DataTableController', ['EntryService', 'uuid'])
 
     addWeekendFlag(resultRows)
 
-  # console.log $scope.sheet
-  # sheetEntries = [
-  #   project: "Fubar"
-  #   date: new Date(2015, 0, 1)
-  # ,
-  #   project: "Fabula"
-  #   date: new Date(2015, 0, 1)
-  # ]
   entries.all($scope.sheet)
   .then (response) ->
     $scope.sheetEntries = (row.doc for row in response.rows)

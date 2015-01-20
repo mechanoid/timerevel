@@ -9,6 +9,7 @@ table.sheet-data-table
       th break (std)
       th hours
       th 
+      th 
   tbody
     tr.sheet-data-table-col(data-ng-repeat="row in combinedRows", data-ng-class="{true: 'weekend', false: ''}[row.weekend]")
       td
@@ -23,8 +24,15 @@ table.sheet-data-table
       td
         input(value="{{row.entry.break}}", data-ng-if="row.entry", data-ng-model="row.entry.break", type="number")
       td 
-        span(data-ng-if="row.entry")
-          {{row.entry | workingHours}}
+        span(data-ng-if="row.entry") {{row.entry | workingHours}}
+      td
+        span(data-ng-if="row.first") {{sheetEntries | overtime: row.date}}
       td 
         button(data-ng-click="deleteEntry(row.entry)", data-ng-if="row.entry") x
+  tfoot
+    tr
+      td(colspan="6") 
+      td {{sheetEntries | monthlyHours}}
+      td 
+      td 
         
