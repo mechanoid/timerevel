@@ -3,8 +3,10 @@
     'DbService'
     'SheetService'
     'EntryService'
+    'HelperService'
     'DataSheetController'
     'DataTableController'
+    'SheetOverviewController'
   ]
 
   app.controller 'timerevelController', ($scope, $rootScope) ->

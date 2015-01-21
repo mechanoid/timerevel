@@ -8,7 +8,7 @@ angular.module('SheetService', ['DbService'])
       "#{year}-#{monthId}"
 
     defaultSheetsForYear: (year) ->
-      ({type: 'sheet', name: name, key: @keyForSheet(year, i), startDate: new Date(year, i, 1), endDate: new Date(year, i + 1, 0)} for i, name of ["Januar"]) #, "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"])
+      ({type: 'sheet', name: name, key: @keyForSheet(year, i), startDate: new Date(year, i, 1), endDate: new Date(year, i + 1, 0)} for i, name of ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"])
 
     findOrCreate: (sheet) ->
       db.put(sheet, "#{sheet.key}")

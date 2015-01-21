@@ -1,0 +1,12 @@
+table.sheet-overview
+  thead
+    tr
+      th
+      th hours
+      th %
+  tbody
+    tr(data-ng-repeat="project in projects")
+      td {{project}}
+      td {{project | workingHoursForProject: entries}}
+      td 
+  
