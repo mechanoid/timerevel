@@ -32,7 +32,7 @@ var vendorDependencies = [
 
 
 gulp.task('stylus', function(){
-  gulp.src('stylus/*.styl').pipe(csspreprocessing()).pipe(gulp.dest('css'));
+  // gulp.src('stylus/*.styl').pipe(csspreprocessing()).pipe(gulp.dest('css'));
 });
 
 

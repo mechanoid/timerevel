@@ -13,6 +13,7 @@ section.segment
         th intermission (std)
         th hours
         th overtime
+        th tm
         th notice
         th 
     tbody
@@ -38,6 +39,10 @@ section.segment
           span(data-ng-if="row.entry") {{row.entry | workingHours}}
         td
           span(data-ng-if="row.first") {{sheetEntries | overtime: row.date}}
+        td
+          div.ui.fitted.slider.checkbox(data-ng-if="row.entry")
+            input(type="checkbox")
+            label
         td
           input(value="{{row.entry.notice}}", data-ng-if="row.entry", data-ng-model="row.entry.notice")
         td 

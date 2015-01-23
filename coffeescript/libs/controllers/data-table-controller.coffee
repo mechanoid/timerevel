@@ -16,10 +16,14 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
       result += helper.overtimeForDate(entries, date)),
     0
 
-.directive 'trTable', ->
+.directive 'trTable', ($timeout) ->
   {
     transclude: true
-    # link: (scope, elem, attrs) ->
+    link: (scope, elem, attrs) ->
+      $timeout ->
+        $('.ui.checkbox').checkbox()
+      , 1000
+      , false
     templateUrl: 'views/data-table'
   }
 
@@ -37,11 +41,11 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
 
     $scope.copyEntry = (entry) ->
-      $scope.copiedEntry = _.pick entry, ['project', 'begin', 'end', 'intermission', 'notice']
+      $scope.copiedEntry = _.pick entry, ['project', 'begin', 'end', 'intermission', 'notice', 'tm']
 
     $scope.pasteEntry = (row) ->
       copy = $scope.copiedEntry
-      entry = entries.new($scope.sheet, row.date, copy.project, copy.begin, copy.end, copy.intermission, copy.notice)
+      entry = entries.new($scope.sheet, row.date, copy.project, copy.begin, copy.end, copy.intermission, copy.notice, copy.tm)
       $scope.sheetEntries.push(entry)
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
       $scope.copiedEntry = null

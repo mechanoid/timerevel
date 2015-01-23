@@ -1,7 +1,7 @@
 angular.module('EntryService', ['DbService', 'uuid'])
 .factory 'entries', (db, rfc4122) ->
   class Entry
-    constructor: (@date, sheet, @project = '', @begin, @end, @intermission, @notice) ->
+    constructor: (@date, sheet, @project = '', @begin, @end, @intermission, @notice, @tm) ->
       @type = 'entry'
       @sheet_id = sheet._id
       @key ?= rfc4122.v4()
@@ -16,6 +16,7 @@ angular.module('EntryService', ['DbService', 'uuid'])
         notice: @notice
         begin: @begin
         end: @end
+        tm: @tm
         intermission: @intermission
       }
 
@@ -52,13 +53,13 @@ angular.module('EntryService', ['DbService', 'uuid'])
           return []
 
         matches = _.filter response.rows, (row) ->
-          row if row.doc.sheet_id is sheet._id
+          row if row?.doc?.sheet_id is sheet._id
         cb(matches)
 
       db.query({map: map}, {include_docs: true}, sheetFilter)
 
-    @new: (sheet, date, project, begin, end, intermission, notice) ->
-      e = new Entry(date, sheet, project, begin, end, intermission, notice)
+    @new: (sheet, date, project, begin, end, intermission, notice, tm) ->
+      e = new Entry(date, sheet, project, begin, end, intermission, notice, tm)
       e.render()
 
     @delete: (item) ->
