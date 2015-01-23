@@ -1,7 +1,6 @@
 node_modules/*
 angular/*
 bower_components/*
-css/*
 javascripts/*
 build/*
 dist/*
