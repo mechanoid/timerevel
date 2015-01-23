@@ -6,4 +6,6 @@ build/*
 dist/*
 *.html
 tmp
+
+Semantic-UI-1.7.3/
 semantic-ui
