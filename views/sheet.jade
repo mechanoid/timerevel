@@ -1,10 +1,14 @@
 h1 sheets
-  
+
+ul.ui.tabular.menu
+  li.item(data-ng-repeat="month in menuEntries", data-ng-class="month.activeMonthClass") 
+    a(href="", data-tab="{{month.name}}") {{month.name}}
+
 ul
-  li(data-ng-repeat="sheet in sheets")
+  li.ui.tab.segment(data-ng-repeat="sheet in sheets", data-ng-class="sheet.currentMonthClass", data-tab="{{sheet.name}}")
     article.sheet
       header 
         h2 {{sheet.name}}
-          
+      
+      tr-overview(data-ng-controller="overviewController")          
       tr-table(data-ng-controller="tableController")
-      tr-overview(data-ng-controller="overviewController")

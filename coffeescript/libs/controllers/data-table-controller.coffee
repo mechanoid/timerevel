@@ -44,6 +44,7 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
       entry = entries.new($scope.sheet, row.date, copy.project, copy.begin, copy.end, copy.intermission, copy.notice)
       $scope.sheetEntries.push(entry)
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
+      $scope.copiedEntry = null
 
 
     $scope.deleteEntry = (entry) ->

@@ -1,9 +1,21 @@
 angular.module('DataSheetController', [])
 
-.directive 'trSheet', ->
+.directive 'trSheet', ($timeout) ->
   {
     transclude: true
     link: (scope, elem, attrs) ->
+      scope.$on 'sheetsLoaded', ->
+        $timeout ->
+          $('.tabular.menu .item').off 'click'
+          $('.tabular.menu .item').on 'click', (e) ->
+            target = $(e.target)
+            console.log target.parents('.menu')
+            target.parents('.menu').find('.item').removeClass('active')
+            target.parent().addClass('active')
+            $.tab('change tab', target.data('tab'))
+        , 0
+        , false
+
     templateUrl: 'views/sheet'
   }
 
@@ -20,16 +32,34 @@ angular.module('DataSheetController', [])
 .controller 'sheetController', ($rootScope, $scope, sheets) ->
 
   sheets.initializeSheetsForYear($rootScope.timerevel.year)
+  currentMonth = new Date().getMonth()
 
   sheets.all()
   .then (response) ->
-    $scope.sheets = (row.doc for row in response.rows)
-    $scope.$watch 'sheets'
-    , (after, before) ->
-      sheets.update(elem) for i, elem of after when _.isEqual(elem, before[i]) isnt true
-    , true
+    sheets = (row.doc for row in response.rows)
+
+
+    $scope.sheets = sheets
+    $scope.menuEntries = []
+
+    for sheet in $scope.sheets
+      sheetMonth = new Date(sheet.startDate).getMonth()
+      monthMenuEntry = { name: sheet.name }
+
+      if sheetMonth is currentMonth
+        sheet.currentMonthClass = "active"
+        monthMenuEntry.activeMonthClass = "active"
+
+      $scope.menuEntries.push monthMenuEntry
+
+    # update is not necessary yet
+    # $scope.$watch 'sheets'
+    # , (after, before) ->
+    #   sheets.update(elem) for i, elem of after when _.isEqual(elem, before[i]) isnt true
+    # , true
 
     $scope.$apply()
+    $scope.$broadcast('sheetsLoaded')
   .catch ->
     $scope.sheetRows = []
 

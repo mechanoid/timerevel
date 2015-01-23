@@ -1,12 +1,16 @@
-table.sheet-overview
-  thead
-    tr
-      th
-      th hours
-      th %
-  tbody
-    tr(data-ng-repeat="project in projects")
-      td {{project}}
-      td {{project | workingHoursForProject: sheetEntries}}
-      td 
-  
+section.segment
+  header
+    h3 Overview
+    
+  table.ui.table.sheet-overview
+    thead
+      tr
+        th
+        th hours
+        th %
+    tbody
+      tr(data-ng-repeat="project in projects")
+        td {{project}}
+        td {{project | workingHoursForProject: sheetEntries}}
+        td 
+    

@@ -7,7 +7,7 @@ angular.module('HelperService', [])
       resultRows = []
       for row in rows
         if row.entry?.project is "urlaub"
-          row.additionalClass = 'vacation'
+          row.additionalClass = 'warning'
         resultRows.push row
       resultRows
 
@@ -16,7 +16,8 @@ angular.module('HelperService', [])
       for row in rows
         # console.log row
         unless 0 < row.date.getDay() < 6
-          row.additionalClass = 'weekend'
+          row.additionalClass = 'dimmer active'
+          row.weekend = true
         resultRows.push row
 
       resultRows

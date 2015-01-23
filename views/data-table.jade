@@ -1,43 +1,53 @@
-table.sheet-data-table
-  thead
-    tr
-      th
-      th
-      th project
-      th begin
-      th end
-      th intermission (std)
-      th hours
-      th 
-      th 
-      th 
-  tbody
-    tr.sheet-data-table-col(data-ng-repeat="row in combinedRows", data-ng-class="row.additionalClass")
-      td
-        button(data-ng-click="newEntry(row)", data-ng-if="row.first") new
-        button(data-ng-click="copyEntry(row.entry)", data-ng-if="row.entry") copy
-        button(data-ng-click="pasteEntry(row)", data-ng-if="!row.entry && copiedEntry") paste
-      td {{row.date|date}}
-      td
-        input(value="{{row.entry.project}}", data-ng-if="row.entry", data-ng-model="row.entry.project")
-      td
-        input(value="{{row.entry.begin}}", data-ng-if="row.entry", data-ng-model="row.entry.begin", type="time")
-      td
-        input(value="{{row.entry.end}}", data-ng-if="row.entry", data-ng-model="row.entry.end", type="time")
-      td
-        input(value="{{row.entry.intermission}}", data-ng-if="row.entry", data-ng-model="row.entry.intermission", type="number")
-      td 
-        span(data-ng-if="row.entry") {{row.entry | workingHours}}
-      td
-        span(data-ng-if="row.first") {{sheetEntries | overtime: row.date}}
-      td
-        input(value="{{row.entry.notice}}", data-ng-if="row.entry", data-ng-model="row.entry.notice")
-      td 
-        button(data-ng-click="deleteEntry(row.entry)", data-ng-if="row.entry") x
-  tfoot
-    tr
-      td(colspan="6") 
-      td {{sheetEntries | monthlyHours}}
-      td {{sheetEntries | overallOvertime: dates}}
-      td 
-      td 
+section.segment
+  header
+    h3 Entries
+
+  table.sheet-data-table.ui.table.compact
+    thead
+      tr
+        th
+        th
+        th project
+        th begin
+        th end
+        th intermission (std)
+        th hours
+        th overtime
+        th notice
+        th 
+    tbody
+      tr.sheet-data-table-col(data-ng-repeat="row in combinedRows", data-ng-class="row.additionalClass")
+        td
+          button.ui.icon.button(data-ng-click="newEntry(row)", data-ng-if="row.first") 
+            i.plus.icon
+          button.ui.icon.button(data-ng-click="copyEntry(row.entry)", data-ng-if="row.entry")           
+            i.copy.icon
+          button.ui.icon.button(data-ng-click="pasteEntry(row)", data-ng-if="!row.entry && copiedEntry")
+            i.paste.icon
+            
+        td {{row.date|date}}
+        td
+          input(value="{{row.entry.project}}", data-ng-if="row.entry", data-ng-model="row.entry.project")
+        td
+          input(value="{{row.entry.begin}}", data-ng-if="row.entry", data-ng-model="row.entry.begin", type="time")
+        td
+          input(value="{{row.entry.end}}", data-ng-if="row.entry", data-ng-model="row.entry.end", type="time")
+        td
+          input(value="{{row.entry.intermission}}", data-ng-if="row.entry", data-ng-model="row.entry.intermission", type="number")
+        td 
+          span(data-ng-if="row.entry") {{row.entry | workingHours}}
+        td
+          span(data-ng-if="row.first") {{sheetEntries | overtime: row.date}}
+        td
+          input(value="{{row.entry.notice}}", data-ng-if="row.entry", data-ng-model="row.entry.notice")
+        td 
+          button.ui.icon.button(data-ng-click="deleteEntry(row.entry)", data-ng-if="row.entry")
+            i.delete.icon
+          
+    tfoot
+      tr
+        td(colspan="6") 
+        td {{sheetEntries | monthlyHours}}
+        td {{sheetEntries | overallOvertime: dates}}
+        td 
+        td 
