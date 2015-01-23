@@ -1,5 +1,5 @@
-angular.module('SheetService', ['DbService'])
-.factory 'sheets', (db) ->
+angular.module('SheetService', ['DbService', 'uuid'])
+.factory 'sheets', (db, rfc4122) ->
   class TrSheets
 
     keyForSheet: (year, i) ->
@@ -8,14 +8,17 @@ angular.module('SheetService', ['DbService'])
       "#{year}-#{monthId}"
 
     defaultSheetsForYear: (year) ->
-      ({type: 'sheet', name: name, key: @keyForSheet(year, i), startDate: new Date(year, i, 1), endDate: new Date(year, i + 1, 0)} for i, name of ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"])
+      result = []
+      for i, name of ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
+        result.push {type: 'sheet', name: name, key: @keyForSheet(year, i), startDate: new Date(year, i, 1), endDate: new Date(year, i + 1, 0)}
 
     findOrCreate: (sheet) ->
-      db.put(sheet, "#{sheet.key}")
-      .then (response) ->
-        console.log response
-      .catch (response) ->
-        # console.log response
+      db.get(sheet._id)
+      .catch (error) ->
+        if error.status is 404
+          db.put(sheet, "#{sheet.key}")
+          .catch (error) ->
+            console.log error
 
     initializeSheetsForYear: (year) ->
       @findOrCreate(sheet) for sheet in @defaultSheetsForYear(year)

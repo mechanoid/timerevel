@@ -7,6 +7,6 @@ table.sheet-overview
   tbody
     tr(data-ng-repeat="project in projects")
       td {{project}}
-      td {{project | workingHoursForProject: entries}}
+      td {{project | workingHoursForProject: sheetEntries}}
       td 
   

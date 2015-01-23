@@ -1,12 +1,12 @@
-angular.module('DataTableController', ['EntryService', 'HelperService', 'uuid'])
+angular.module('DataTableController', ['EntryService', 'HelperService'])
 .filter 'workingHours', (helper) -> helper.entryDuration
 .filter 'monthlyHours', (helper) ->
-  (entries) ->
-    _.reduce entries,
-    ((result, entry) ->
-      result += helper.entryDuration(entry)),
-    0
-
+  # (sheetEntries) ->
+  #   _.reduce sheetEntries,
+  #   ((result, entry) ->
+  #     result += helper.entryDuration(entry)),
+  #   0
+  -> 0
 .filter 'overtime', (helper) -> helper.overtimeForDate
 
 .filter 'overallOvertime', (helper) ->
@@ -24,24 +24,36 @@ angular.module('DataTableController', ['EntryService', 'HelperService', 'uuid'])
   }
 
 .controller 'tableController', ($scope, entries, helper) ->
-  setupTableController = (sheetEntries) ->
-    $scope.sheetEntries = sheetEntries
+  setupTableController = (sheetEntryRows) ->
+    $scope.sheetEntries = (row.doc for row in sheetEntryRows)
     currentDateRows = helper.dateRows($scope.sheet.startDate, $scope.sheet.endDate)
     $scope.dates = _.map(currentDateRows, (row) -> row.date)
 
     $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
 
-    $scope.newEntry = (row) =>
-      $scope.sheetEntries.push(entries.new($scope.sheet, row.date))
+    $scope.newEntry = (row) ->
+      entry = entries.new($scope.sheet, row.date)
+      $scope.sheetEntries.push(entry)
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
 
-    $scope.deleteEntry = (entry) =>
+    $scope.copyEntry = (entry) ->
+      $scope.copiedEntry = _.pick entry, ['project', 'begin', 'end', 'intermission', 'notice']
+
+    $scope.pasteEntry = (row) ->
+      copy = $scope.copiedEntry
+      entry = entries.new($scope.sheet, row.date, copy.project, copy.begin, copy.end, copy.intermission, copy.notice)
+      $scope.sheetEntries.push(entry)
+      $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
+
+
+    $scope.deleteEntry = (entry) ->
       entries.delete(entry)
       _.remove($scope.sheetEntries, (current) -> current.key is entry.key)
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
 
     $scope.$watch "sheetEntries",
     ((after, before) ->
+      # console.log after[0]
       entries.update(elem) for i, elem of after when _.isEqual(elem, before[i]) isnt true),
     true
     $scope.$apply()

@@ -1,16 +1,10 @@
 h1 sheets
   
-p Drop all sheets:
-button(data-ng-click="deleteAll()")
-  | delete all
-  
 ul
   li(data-ng-repeat="sheet in sheets")
     article.sheet
       header 
         h2 {{sheet.name}}
-        //- input(type="text", ng-model="sheet.name")
-        
           
       tr-table(data-ng-controller="tableController")
       tr-overview(data-ng-controller="overviewController")

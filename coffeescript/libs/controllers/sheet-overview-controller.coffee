@@ -10,12 +10,13 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
   }
 
 .controller 'overviewController', ($scope, entries, helper) ->
-  # entries.all($scope.sheet)
-  # .then (response) ->
-  #   $scope.entries = (row.doc for row in response.rows)
-  #   console.log $scope.entries
-  #   projectNames = (entry.project for entry in $scope.entries)
-  #
-  #   $scope.projects = _.uniq(projectNames)
-  #
-  #   $scope.$apply()
+  setupOverviewController = (sheetEntryRows) ->
+    $scope.sheetEntries = (row.doc for row in sheetEntryRows)
+    projectNames = (entry.project for entry in $scope.sheetEntries)
+
+    $scope.projects = _.uniq(projectNames)
+
+    $scope.$apply()
+
+
+  entries.all($scope.sheet, setupOverviewController)

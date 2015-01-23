@@ -1,7 +1,7 @@
 angular.module('DbService', ['pouchdb'])
 .factory 'db', (pouchDB) ->
   class DbService
-    dbName: "timerevel"
+    dbName: "timerevel-db"
 
     retryReplication: =>
       console.log 'retry replication'

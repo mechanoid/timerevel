@@ -3,20 +3,28 @@ angular.module('HelperService', [])
   class Helper
 
 
+    @addVacationFlag = (rows) ->
+      resultRows = []
+      for row in rows
+        if row.entry?.project is "urlaub"
+          row.additionalClass = 'vacation'
+        resultRows.push row
+      resultRows
+
     @addWeekendFlag = (rows) ->
       resultRows = []
       for row in rows
-
+        # console.log row
         unless 0 < row.date.getDay() < 6
-          row.weekend = true
+          row.additionalClass = 'weekend'
         resultRows.push row
 
       resultRows
 
-    @combineRows = (dateRows, entries) ->
+    @combineRows = (dateRows, sheetEntries) =>
       resultRows = []
       for row in dateRows
-        entryRows = ({date: entry.date, entry: entry} for entry in entries when +(new Date(entry.date)) is +(row.date))
+        entryRows = ({date: new Date(entry.date), entry: entry} for entry in sheetEntries when +(new Date(entry.date)) is +(row.date))
 
         if entryRows.length > 0
           firstRow = true
@@ -30,6 +38,7 @@ angular.module('HelperService', [])
           row.first = true
           resultRows.push row
 
+      resultRows = @addVacationFlag(resultRows)
       @addWeekendFlag(resultRows)
 
 
@@ -41,8 +50,8 @@ angular.module('HelperService', [])
 
     @entryDuration = (entry) ->
       oneHour = 60 * 60 * 1000
-      if entry? and entry.end? and entry.begin? and entry.break?
-        (((entry.end.getTime() - entry.begin.getTime()) / oneHour)) - entry.break
+      if entry? and entry.end? and entry.begin? and entry.intermission?
+        (((entry.end.getTime() - entry.begin.getTime()) / oneHour)) - entry.intermission
       else
         0
 

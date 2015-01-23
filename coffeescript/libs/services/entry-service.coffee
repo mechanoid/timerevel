@@ -1,18 +1,22 @@
-angular.module('EntryService', ['DbService'])
+angular.module('EntryService', ['DbService', 'uuid'])
 .factory 'entries', (db, rfc4122) ->
   class Entry
-    constructor: (@sheet, @date, @project = '', @key = null) ->
+    constructor: (@date, sheet, @project = '', @begin, @end, @intermission, @notice) ->
       @type = 'entry'
-      @sheet_id = @sheet.key
+      @sheet_id = sheet._id
       @key ?= rfc4122.v4()
 
     render: ->
       {
         project: @project
-        sheet_id: @sheet_id
         date: @date
         type: @type
+        sheet_id: @sheet_id
         key: @key
+        notice: @notice
+        begin: @begin
+        end: @end
+        intermission: @intermission
       }
 
     # @TODO: add a entry list view
@@ -40,7 +44,7 @@ angular.module('EntryService', ['DbService'])
       map = (doc) ->
         if doc?.type is "entry"
           # order by startdate
-          emit(doc.date)
+          emit(doc)
 
       sheetFilter = (err, response) ->
         if err?
@@ -48,16 +52,14 @@ angular.module('EntryService', ['DbService'])
           return []
 
         matches = _.filter response.rows, (row) ->
-          true if row.doc.sheet_id is sheet.key
-
+          row if row.doc.sheet_id is sheet._id
         cb(matches)
 
-      db.query({map: map}, {include_docs: true, reduce: false}, sheetFilter)
+      db.query({map: map}, {include_docs: true}, sheetFilter)
 
-    @new: (sheet, date) ->
-      console.log "NEW"
-      # entry = { project: '', date: date, type: 'entry' }
-      new Entry(sheet, date).render()
+    @new: (sheet, date, project, begin, end, intermission, notice) ->
+      e = new Entry(date, sheet, project, begin, end, intermission, notice)
+      e.render()
 
     @delete: (item) ->
       db.get(item.key)
@@ -71,7 +73,6 @@ angular.module('EntryService', ['DbService'])
         console.log error
 
     @update: (item) ->
-      # console.log item
       db.get(item.key)
       .then (entry) ->
         delete item._rev
@@ -81,12 +82,16 @@ angular.module('EntryService', ['DbService'])
           entry[attr] = item[attr]
 
         db.put(entry, entry.key)
+        .then ->
+          console.log "updated"
         .catch (error) ->
           console.log error
 
       .catch (error) ->
         if error.status is 404
           db.put(item, item.key)
+          .then ->
+            console.log "created"
           .catch (error) ->
             console.log error
 
