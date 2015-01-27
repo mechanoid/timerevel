@@ -40,9 +40,10 @@ section.segment
         td
           span(data-ng-if="row.first") {{sheetEntries | overtime: row.date}}
         td
-          div.ui.fitted.slider.checkbox(data-ng-if="row.entry")
-            input(type="checkbox")
-            label
+          //- .ui.fitted.slider.checkbox
+          div(data-ng-if="row.entry")
+            input(type="checkbox", data-ng-model="row.entry.tm")
+            label 
         td
           input(value="{{row.entry.notice}}", data-ng-if="row.entry", data-ng-model="row.entry.notice")
         td 

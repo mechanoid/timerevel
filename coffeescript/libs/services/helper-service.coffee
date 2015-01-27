@@ -47,12 +47,14 @@ angular.module('HelperService', [])
       begin = new Date(begin)
       end = new Date(end)
       dayLength = end.getDate() - begin.getDate()
-      range = ({date: new Date(begin.getFullYear(), begin.getMonth(), day)} for day in [1..31] when day < dayLength)
+      range = ({date: new Date(begin.getFullYear(), begin.getMonth(), day)} for day in [1..31] when day <= dayLength)
 
     @entryDuration = (entry) ->
       oneHour = 60 * 60 * 1000
       if entry? and entry.end? and entry.begin? and entry.intermission?
-        (((entry.end.getTime() - entry.begin.getTime()) / oneHour)) - entry.intermission
+        beginTime = Date.parse(entry.begin)
+        endTime = Date.parse(entry.end)
+        (((endTime - beginTime) / oneHour)) - entry.intermission
       else
         0
 
@@ -67,8 +69,8 @@ angular.module('HelperService', [])
       else
         0
 
-    @workingHoursForProject:  (projectName, entries) =>
-
+    @workingHoursForProject:  (project, entries) =>
+      projectName = project.name
       entries = _.filter entries, (entry, _) =>
         entry.project is projectName
 

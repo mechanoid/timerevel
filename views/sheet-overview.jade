@@ -10,7 +10,12 @@ section.segment
         th %
     tbody
       tr(data-ng-repeat="project in projects")
-        td {{project}}
+        td {{project.name}}
         td {{project | workingHoursForProject: sheetEntries}}
-        td 
+        td
+      tr
+        td overall
+        td {{hoursSum}}
+        td
+          
     

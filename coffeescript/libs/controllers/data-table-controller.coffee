@@ -58,7 +58,6 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
 
     $scope.$watch "sheetEntries",
     ((after, before) ->
-      # console.log after[0]
       entries.update(elem) for i, elem of after when _.isEqual(elem, before[i]) isnt true),
     true
     $scope.$apply()

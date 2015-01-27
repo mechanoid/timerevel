@@ -53,7 +53,11 @@ angular.module('EntryService', ['DbService', 'uuid'])
           return []
 
         matches = _.filter response.rows, (row) ->
-          row if row?.doc?.sheet_id is sheet._id
+          if row?.doc?.sheet_id is sheet._id
+            row.doc.date = new Date(row.doc.date) if row.doc.begin
+            row.doc.begin = new Date(row.doc.begin) if row.doc.begin
+            row.doc.end = new Date(row.doc.end) if row.doc.end
+            row
         cb(matches)
 
       db.query({map: map}, {include_docs: true}, sheetFilter)

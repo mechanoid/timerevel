@@ -9,7 +9,6 @@ angular.module('DataSheetController', [])
           $('.tabular.menu .item').off 'click'
           $('.tabular.menu .item').on 'click', (e) ->
             target = $(e.target)
-            console.log target.parents('.menu')
             target.parents('.menu').find('.item').removeClass('active')
             target.parent().addClass('active')
             $.tab('change tab', target.data('tab'))
