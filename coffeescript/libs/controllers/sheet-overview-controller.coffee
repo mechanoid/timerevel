@@ -9,19 +9,36 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
     templateUrl: 'views/sheet-overview'
   }
 
-.controller 'overviewController', ($scope, entries, helper, db) ->
-  setupOverviewController = (sheetEntryRows) ->
-    $scope.sheetEntries = (row.doc for row in sheetEntryRows)
-    projectNames = _.uniq(entry.project for entry in $scope.sheetEntries)
-    $scope.projects = []
-    for projectName in projectNames
-      $scope.projects.push {name: projectName}
+.controller 'overviewController', ($rootScope, $scope, entries, helper, db) ->
+  overallOvertime = ->
+    dateRows = helper.dateRows($scope.sheet.startDate, $scope.sheet.endDate)
+    _.reduce dateRows
+    , (result, row) ->
+      result += helper.overtimeForDate($scope.sheetEntries, row.date)
+    , 0
 
-    $scope.hoursSum = _.reduce $scope.sheetEntries
+  overallHours = ->
+    _.reduce $scope.sheetEntries
     , (result, entry) ->
       result += helper.entryDuration(entry)
     , 0
 
+  projects = ->
+    projectNames = _.uniq(entry.project for entry in $scope.sheetEntries)
+    ({name: projectName} for projectName in projectNames)
+
+  setupSummaries = (sheetEntryRows) ->
+    $scope.projects = projects()
+    $scope.overtimeSum = overallOvertime()
+    $scope.hoursSum = overallHours()
+
+  setupOverviewController = (sheetEntryRows) ->
+    $scope.sheetEntries = (row.doc for row in sheetEntryRows)
+    setupSummaries()
+
+    $rootScope.$on "entries-added-to-#{$scope.sheet.name}", (_, sheetEntries) ->
+      $scope.sheetEntries = sheetEntries
+      setupSummaries(sheetEntryRows)
 
     $scope.$apply()
 

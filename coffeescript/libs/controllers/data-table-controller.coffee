@@ -27,7 +27,10 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
     templateUrl: 'views/data-table'
   }
 
-.controller 'tableController', ($scope, entries, helper) ->
+.controller 'tableController', ($rootScope, $scope, entries, helper) ->
+  notifySheetEntryChanges = (sheetEntries) ->
+    $rootScope.$broadcast("entries-added-to-#{$scope.sheet.name}", sheetEntries)
+
   setupTableController = (sheetEntryRows) ->
     $scope.sheetEntries = (row.doc for row in sheetEntryRows)
     currentDateRows = helper.dateRows($scope.sheet.startDate, $scope.sheet.endDate)
@@ -38,6 +41,7 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
     $scope.newEntry = (row) ->
       entry = entries.new($scope.sheet, row.date)
       $scope.sheetEntries.push(entry)
+      notifySheetEntryChanges($scope.sheetEntries)
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
 
     $scope.copyEntry = (entry) ->
@@ -47,6 +51,7 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
       copy = $scope.copiedEntry
       entry = entries.new($scope.sheet, row.date, copy.project, copy.begin, copy.end, copy.intermission, copy.notice, copy.tm)
       $scope.sheetEntries.push(entry)
+      notifySheetEntryChanges($scope.sheetEntries)
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
       $scope.copiedEntry = null
 
@@ -54,10 +59,12 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
     $scope.deleteEntry = (entry) ->
       entries.delete(entry)
       _.remove($scope.sheetEntries, (current) -> current.key is entry.key)
+      notifySheetEntryChanges($scope.sheetEntries)
       $scope.combinedRows = helper.combineRows(currentDateRows, $scope.sheetEntries)
 
     $scope.$watch "sheetEntries",
     ((after, before) ->
+      notifySheetEntryChanges($scope.sheetEntries)
       entries.update(elem) for i, elem of after when _.isEqual(elem, before[i]) isnt true),
     true
     $scope.$apply()
