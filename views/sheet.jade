@@ -8,7 +8,9 @@ ul.sheet-list
   li.ui.tab.segment(data-ng-repeat="sheet in sheets", data-ng-class="sheet.currentMonthClass", data-tab="{{sheet.name}}")
     article.sheet
       header 
-        h2 {{sheet.name}}
+        h2 {{sheet.name}} 
+        p {{sheet.startDate | date}} - {{sheet.endDate | date}}
+        
       
       tr-overview(data-ng-controller="overviewController")          
       tr-table(data-ng-controller="tableController")

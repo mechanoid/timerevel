@@ -10,11 +10,14 @@ angular.module('SheetService', ['DbService', 'uuid'])
     defaultSheetsForYear: (year) ->
       result = []
       for i, name of ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
+        i = parseInt(i)
         result.push {type: 'sheet', name: name, key: @keyForSheet(year, i), startDate: new Date(year, i, 1), endDate: new Date(year, i + 1, 0)}
+      result
 
     findOrCreate: (sheet) ->
-      db.get(sheet._id)
+      db.get(sheet.key)
       .catch (error) ->
+        console.log error
         if error.status is 404
           db.put(sheet, "#{sheet.key}")
           .catch (error) ->
@@ -22,6 +25,7 @@ angular.module('SheetService', ['DbService', 'uuid'])
 
     initializeSheetsForYear: (year) ->
       @findOrCreate(sheet) for sheet in @defaultSheetsForYear(year)
+
 
     all: ->
       map = (doc) ->

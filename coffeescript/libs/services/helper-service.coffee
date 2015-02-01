@@ -46,7 +46,7 @@ angular.module('HelperService', [])
     @dateRows = (begin, end) ->
       begin = new Date(begin)
       end = new Date(end)
-      dayLength = end.getDate() - begin.getDate()
+      dayLength = end.getDate() - begin.getDate() + 1
       range = ({date: new Date(begin.getFullYear(), begin.getMonth(), day)} for day in [1..31] when day <= dayLength)
 
     @entryDuration = (entry) ->
