@@ -5,6 +5,10 @@ angular.module('DbService', ['pouchdb'])
 
     retryReplication: =>
       console.log 'retry replication'
+      @remotedb = try
+        new PouchDB("http://localhost:5984/#{@dbName}")
+      catch error
+        console.log error
       @replicate(@localdb, @remotedb)
 
     replicate: (localdb, remotedb) =>
