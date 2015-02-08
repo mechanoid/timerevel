@@ -51,12 +51,6 @@ angular.module('DataSheetController', [])
 
       $scope.menuEntries.push monthMenuEntry
 
-    # update is not necessary yet
-    # $scope.$watch 'sheets'
-    # , (after, before) ->
-    #   sheets.update(elem) for i, elem of after when _.isEqual(elem, before[i]) isnt true
-    # , true
-
     $scope.$apply()
     $scope.$broadcast('sheetsLoaded')
   .catch ->
