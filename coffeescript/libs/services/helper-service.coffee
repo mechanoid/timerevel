@@ -1,5 +1,5 @@
 angular.module('HelperService', [])
-.factory 'helper', ->
+.factory 'helper', (db, sheets) ->
   class Helper
 
 
@@ -58,6 +58,19 @@ angular.module('HelperService', [])
       else
         0
 
+    @workingHoursForProject:  (project, entries) =>
+      projectName = project.name
+      entries = _.filter entries, (entry, _) =>
+        entry.project is projectName
+
+      _.reduce entries,
+      ((result, entry) =>
+        result += @entryDuration(entry)),
+      0
+
+    @previousSheet = (sheet) ->
+
+
     @overtimeForDate = (entries, date) =>
       dayEntries = (entry for entry in entries when +(entry.date) is +date)
 
@@ -69,15 +82,16 @@ angular.module('HelperService', [])
       else
         0
 
-    @workingHoursForProject:  (project, entries) =>
-      projectName = project.name
-      entries = _.filter entries, (entry, _) =>
-        entry.project is projectName
+    @overallOvertime: (entries, dates) =>
+      _.reduce dates
+      , ((result, date) =>
+        result += @overtimeForDate(entries, date))
+      , 0
 
-      _.reduce entries,
-      ((result, entry) =>
-        result += @entryDuration(entry)),
-      0
+    @previousSheetKey: (sheet) =>
+      monthDate = new Date(sheet.startDate)
+      beforeMonthDate = new Date(monthDate.getFullYear(), monthDate.getMonth(), 0);
+      beforeSheetKey = sheets.keyForSheet(beforeMonthDate.getFullYear(), beforeMonthDate.getMonth())
 
 
   Helper

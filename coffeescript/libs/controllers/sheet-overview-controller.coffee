@@ -9,13 +9,16 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
     templateUrl: 'views/sheet-overview'
   }
 
-.controller 'overviewController', ($rootScope, $scope, entries, helper, db) ->
+.controller 'overviewController', ($rootScope, $scope, entries, sheets, helper, db) ->
   overallOvertime = ->
     dateRows = helper.dateRows($scope.sheet.startDate, $scope.sheet.endDate)
-    _.reduce dateRows
+    overtime = _.reduce dateRows
     , (result, row) ->
       result += helper.overtimeForDate($scope.sheetEntries, row.date)
     , 0
+    $scope.sheet.overtime = overtime
+    # sheets.update($scope.sheet)
+    overtime
 
   overallHours = ->
     _.reduce $scope.sheetEntries

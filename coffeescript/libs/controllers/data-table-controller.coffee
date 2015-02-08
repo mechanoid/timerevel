@@ -9,12 +9,8 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
   -> 0
 .filter 'overtime', (helper) -> helper.overtimeForDate
 
-.filter 'overallOvertime', (helper) ->
-  (entries, dates) ->
-    _.reduce dates,
-    ((result, date) ->
-      result += helper.overtimeForDate(entries, date)),
-    0
+.filter 'overallOvertime', (helper) -> helper.overallOvertime
+# .filter 'previousOvertime', (helper) -> helper.previousOvertime
 
 .directive 'trTable', ($timeout) ->
   {
@@ -27,7 +23,7 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
     templateUrl: 'views/data-table'
   }
 
-.controller 'tableController', ($rootScope, $scope, entries, helper) ->
+.controller 'tableController', ($rootScope, $scope, entries, sheets, helper) ->
   notifySheetEntryChanges = (sheetEntries) ->
     $rootScope.$broadcast("entries-added-to-#{$scope.sheet.name}", sheetEntries)
 
@@ -70,3 +66,7 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
     $scope.$apply()
 
   entries.all($scope.sheet, setupTableController)
+
+  sheets.findByKey(helper.previousSheetKey($scope.sheet)).then (previousSheet) ->
+    $scope.previousOvertime = previousSheet?.overtime
+    $scope.$apply()

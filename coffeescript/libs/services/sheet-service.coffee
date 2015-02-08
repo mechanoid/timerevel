@@ -2,10 +2,13 @@ angular.module('SheetService', ['DbService', 'uuid'])
 .factory 'sheets', (db, rfc4122) ->
   class TrSheets
 
-    keyForSheet: (year, i) ->
+    @keyForSheet: (year, i) ->
       monthId = "#{parseInt(i)+1}"
       monthId = "0#{monthId}" if monthId.length is 1
       "#{year}-#{monthId}"
+
+    keyForSheet: (year, i) ->
+      @constructor.keyForSheet(year, i)
 
     defaultSheetsForYear: (year) ->
       result = []
@@ -23,6 +26,11 @@ angular.module('SheetService', ['DbService', 'uuid'])
           .catch (error) ->
             console.log error
 
+    findByKey: (sheetKey) ->
+      db.get(sheetKey)
+      .catch (error) ->
+        # console.log "sheet not found"
+
     initializeSheetsForYear: (year) ->
       @findOrCreate(sheet) for sheet in @defaultSheetsForYear(year)
 
@@ -38,8 +46,12 @@ angular.module('SheetService', ['DbService', 'uuid'])
     update: (item) =>
       db.get(item._id)
       .then (sheet) =>
-        # only name should be editable
-        sheet.name = item.name
+        delete item._rev
+        delete item._id
+
+        for attr, _ of item
+          sheet[attr] = item[attr]
+
         db.put(sheet, sheet.id)
         .catch (error) ->
           console.log "update wasn't successful"
