@@ -19,7 +19,7 @@ section.segment
     tbody
       tr 
         td.previous-overtime(colspan="7", style="text-align: right;") previous overtime:
-        td {{previousOvertime}}
+        td {{previousOvertime | asOvertime}}
         td 
         td 
         td 
@@ -44,7 +44,7 @@ section.segment
         td 
           span(data-ng-if="row.entry") {{row.entry | workingHours}}
         td
-          span(data-ng-if="row.first") {{sheetEntries | overtime: row.date}}
+          span(data-ng-if="row.first") {{sheetEntries | overtime: row.date | asOvertime}}
         td
           //- .ui.fitted.slider.checkbox
           div(data-ng-if="row.entry")
@@ -60,6 +60,6 @@ section.segment
       tr
         td(colspan="6") 
         td {{sheetEntries | monthlyHours}}
-        td {{sheetEntries | overallOvertime: dates}}
+        td {{sheetEntries | overallOvertime: dates | asOvertime}}
         td 
         td 

@@ -55,16 +55,3 @@ angular.module('DataSheetController', [])
     $scope.$broadcast('sheetsLoaded')
   .catch ->
     $scope.sheetRows = []
-
-
-
-# # $q EXAMPLE
-# $q.all([
-#   pp.getScore('1'),
-#   pp.getScore('2'),
-#   pp.getScore('3')
-# ]).then(function(res) {
-#     $scope.score['1'] = res[0];
-#     $scope.score['2'] = res[1];
-#     $scope.score['3'] = res[2]
-#   });

@@ -70,3 +70,14 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
   sheets.findByKey(helper.previousSheetKey($scope.sheet)).then (previousSheet) ->
     $scope.previousOvertime = previousSheet?.overtime
     $scope.$apply()
+
+  # # $q EXAMPLE
+  # $q.all([
+  #   pp.getScore('1'),
+  #   pp.getScore('2'),
+  #   pp.getScore('3')
+  # ]).then(function(res) {
+  #     $scope.score['1'] = res[0];
+  #     $scope.score['2'] = res[1];
+  #     $scope.score['3'] = res[2]
+  #   });

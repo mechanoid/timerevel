@@ -8,13 +8,11 @@
     "url": ""
   },
   "dependencies": {
-    "cson": "^1.6.2",
     "ecstatic": "*",
     "gulp": "*",
     "gulp-coffee": "*",
     "gulp-concat": "*",
     "gulp-copy": "*",
-    "gulp-gh-pages": "*",
     "gulp-google-cdn": "*",
     "gulp-jade": "*",
     "gulp-livereload": "*",

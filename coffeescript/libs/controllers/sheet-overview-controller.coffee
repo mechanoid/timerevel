@@ -2,6 +2,12 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
 .filter 'workingHoursForProject', (helper) ->
   helper.workingHoursForProject
 
+.filter 'asOvertime', ->
+  (overtime) ->
+    if parseFloat(overtime) > 0 then "+#{overtime}" else overtime
+
+
+
 
 .directive 'trOverview', ->
   {

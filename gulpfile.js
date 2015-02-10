@@ -6,7 +6,6 @@ var gutil = require('gulp-util');
 var print = require('gulp-print');
 var livereload = require('gulp-livereload');
 var watch = require('gulp-watch');
-var deploy = require('gulp-gh-pages');
 var copy = require('gulp-copy');
 var concat = require('gulp-concat');
 var googlecdn = require('gulp-google-cdn');
@@ -86,19 +85,11 @@ gulp.task('package', ['cleanbuild'], function (done) {
     });
 });
 
-
 gulp.task('bower-2-google-cdn', ['package'], function () {
     return gulp.src(['build/**/*.html'])
         .pipe(googlecdn(require('./bower.json'), {cdn: "cdnjs" ,debug: true}))
         .pipe(gulp.dest('build'));
 });
-
-
-gulp.task('deploy', ['bower-2-google-cdn'], function () {
-    return gulp.src('build/**/*')
-    .pipe(deploy({cacheDir: './tmp'}));
-});
-
 
 gulp.task('watch', function() {
   livereload.listen();
