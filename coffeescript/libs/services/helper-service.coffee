@@ -6,17 +6,26 @@ angular.module('HelperService', [])
     @addVacationFlag = (rows) ->
       resultRows = []
       for row in rows
+        row.additionalClass ?= ''
+        # TODO: combine flag functions
+        if row.odd
+          row.additionalClass += 'rowOdd '
+
+        if row.first
+          row.additionalClass += 'firstRow '
+
         if row.entry?.project is "urlaub"
-          row.additionalClass = 'warning'
+          row.additionalClass += 'warning '
         resultRows.push row
       resultRows
 
     @addWeekendFlag = (rows) ->
       resultRows = []
       for row in rows
+        row.additionalClass ?= ''
         # console.log row
         unless 0 < row.date.getDay() < 6
-          row.additionalClass = 'dimmer active'
+          row.additionalClass += 'dimmer active'
           row.weekend = true
         resultRows.push row
 
@@ -24,19 +33,32 @@ angular.module('HelperService', [])
 
     @combineRows = (dateRows, sheetEntries) =>
       resultRows = []
-      for row in dateRows
+      for row, i in dateRows
+        even = i % 2 is 0
+
         entryRows = ({date: new Date(entry.date), entry: entry} for entry in sheetEntries when +(new Date(entry.date)) is +(row.date))
 
         if entryRows.length > 0
+          entryRows = _.sortBy(entryRows, (n) -> n.projectName)
           firstRow = true
+
           for row in entryRows
             if firstRow
               row.first = true
               firstRow = false
 
+            if even
+              row.even = true
+            else
+              row.odd = true
+
             resultRows.push row
         else
           row.first = true
+          if even
+            row.even = true
+          else
+            row.odd = true
           resultRows.push row
 
       resultRows = @addVacationFlag(resultRows)
@@ -82,11 +104,12 @@ angular.module('HelperService', [])
       else
         0
 
-    @overallOvertime: (entries, dates) =>
+    @overallOvertime: (entries, sheet, dates) =>
       _.reduce dates
       , ((result, date) =>
         result += @overtimeForDate(entries, date))
       , 0
+
 
     @previousSheetKey: (sheet) =>
       monthDate = new Date(sheet.startDate)

@@ -29,7 +29,7 @@ section.segment
             i.plus.icon
           button.ui.icon.button(data-ng-click="copyEntry(row.entry)", data-ng-if="row.entry")           
             i.copy.icon
-          button.ui.icon.button(data-ng-click="pasteEntry(row)", data-ng-if="!row.entry && copiedEntry")
+          button.ui.icon.button(data-ng-click="pasteEntry(row)", data-ng-if="row.first && copiedEntry")
             i.paste.icon
             
         td {{row.date|date}}
@@ -60,6 +60,6 @@ section.segment
       tr
         td(colspan="6") 
         td {{sheetEntries | monthlyHours}}
-        td {{sheetEntries | overallOvertime: dates | asOvertime}}
+        td {{sheetEntries | overallOvertime: sheet: dates | asOvertime}}
         td 
         td 

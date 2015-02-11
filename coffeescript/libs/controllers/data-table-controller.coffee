@@ -23,7 +23,7 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
     templateUrl: 'views/data-table'
   }
 
-.controller 'tableController', ($rootScope, $scope, entries, sheets, helper) ->
+.controller 'tableController', ($rootScope, $q, $scope, entries, sheets, helper) ->
   notifySheetEntryChanges = (sheetEntries) ->
     $rootScope.$broadcast("entries-added-to-#{$scope.sheet.name}", sheetEntries)
 
@@ -63,21 +63,13 @@ angular.module('DataTableController', ['EntryService', 'HelperService'])
       notifySheetEntryChanges($scope.sheetEntries)
       entries.update(elem) for i, elem of after when _.isEqual(elem, before[i]) isnt true),
     true
-    $scope.$apply()
 
-  entries.all($scope.sheet, setupTableController)
 
-  sheets.findByKey(helper.previousSheetKey($scope.sheet)).then (previousSheet) ->
-    $scope.previousOvertime = previousSheet?.overtime
-    $scope.$apply()
-
-  # # $q EXAMPLE
-  # $q.all([
-  #   pp.getScore('1'),
-  #   pp.getScore('2'),
-  #   pp.getScore('3')
-  # ]).then(function(res) {
-  #     $scope.score['1'] = res[0];
-  #     $scope.score['2'] = res[1];
-  #     $scope.score['3'] = res[2]
-  #   });
+  $q.all([
+    entries.all($scope.sheet),
+    sheets.findByKey(helper.previousSheetKey($scope.sheet))
+  ]).then((res) ->
+    [sheetEntries, previousSheet] = res
+    setupTableController(sheetEntries)
+    $scope.sheet.previousOvertime = $scope.previousOvertime = previousSheet?.overtime
+  );

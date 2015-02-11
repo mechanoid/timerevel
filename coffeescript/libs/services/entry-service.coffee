@@ -1,5 +1,5 @@
 angular.module('EntryService', ['DbService', 'uuid'])
-.factory 'entries', (db, rfc4122) ->
+.factory 'entries', ($q, db, rfc4122) ->
   class Entry
     constructor: (@date, sheet, @project = '', @begin, @end, @intermission, @notice, @tm) ->
       @type = 'entry'
@@ -42,6 +42,8 @@ angular.module('EntryService', ['DbService', 'uuid'])
 
 
     @all: (sheet, cb) ->
+
+      deferred = $q.defer()
       map = (doc) ->
         if doc?.type is "entry"
           # order by startdate
@@ -50,7 +52,7 @@ angular.module('EntryService', ['DbService', 'uuid'])
       sheetFilter = (err, response) ->
         if err?
           console.log err
-          return []
+          deferred.reject([])
 
         matches = _.filter response.rows, (row) ->
           if row?.doc?.sheet_id is sheet._id
@@ -58,9 +60,11 @@ angular.module('EntryService', ['DbService', 'uuid'])
             row.doc.begin = new Date(row.doc.begin) if row.doc.begin
             row.doc.end = new Date(row.doc.end) if row.doc.end
             row
-        cb(matches)
+        cb?(matches)
+        deferred.resolve(matches)
 
       db.query({map: map}, {include_docs: true}, sheetFilter)
+      deferred.promise
 
     @new: (sheet, date, project, begin, end, intermission, notice, tm) ->
       e = new Entry(date, sheet, project, begin, end, intermission, notice, tm)
@@ -93,6 +97,7 @@ angular.module('EntryService', ['DbService', 'uuid'])
           console.log error
 
       .catch (error) ->
+        console.log "ERROR: ", error
         if error.status is 404
           db.put(item, item.key)
           .then ->

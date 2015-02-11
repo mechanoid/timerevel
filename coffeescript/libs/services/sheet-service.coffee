@@ -52,10 +52,14 @@ angular.module('SheetService', ['DbService', 'uuid'])
         for attr, _ of item
           sheet[attr] = item[attr]
 
-        db.put(sheet, sheet.id)
+        db.put(sheet, sheet.key)
+        .then ->
+          console.log 'sheet updated'
         .catch (error) ->
           console.log "update wasn't successful"
           console.log error
+      .catch ->
+        console.log "sheet not found", item
 
 
     constructor: ->

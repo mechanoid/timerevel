@@ -1,5 +1,8 @@
 head
   title timerevel
   meta(charset='UTF-8')
+  style
+    | tr.rowOdd td:first-of-type { border-left: 1px solid red; }
+    | tr.rowOdd.dimmer td { border-left: none; }
   link(rel='stylesheet', href='./css/semantic.min.css', media='screen', title='semantic')
   link(rel='stylesheet', href='./css/app.css', media='screen', title='application')

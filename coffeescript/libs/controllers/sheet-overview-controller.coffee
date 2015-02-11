@@ -18,13 +18,9 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
 .controller 'overviewController', ($rootScope, $scope, entries, sheets, helper, db) ->
   overallOvertime = ->
     dateRows = helper.dateRows($scope.sheet.startDate, $scope.sheet.endDate)
-    overtime = _.reduce dateRows
-    , (result, row) ->
-      result += helper.overtimeForDate($scope.sheetEntries, row.date)
-    , 0
-    $scope.sheet.overtime = overtime
-    # sheets.update($scope.sheet)
-    overtime
+    dates = (row.date for row in dateRows)
+
+    helper.overallOvertime($scope.sheetEntries, $scope.sheet, dates)
 
   overallHours = ->
     _.reduce $scope.sheetEntries
@@ -38,8 +34,10 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
 
   setupSummaries = (sheetEntryRows) ->
     $scope.projects = projects()
-    $scope.overtimeSum = overallOvertime()
+    $scope.sheet.overtime = $scope.overtimeSum = overallOvertime()
     $scope.hoursSum = overallHours()
+    # TODO: is this update necessary, does it work already and it is legacy? ??
+    # sheets.update($scope.sheet)
 
   setupOverviewController = (sheetEntryRows) ->
     $scope.sheetEntries = (row.doc for row in sheetEntryRows)
@@ -49,8 +47,4 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
       $scope.sheetEntries = sheetEntries
       setupSummaries(sheetEntryRows)
 
-    $scope.$apply()
-
-  entries.all($scope.sheet, setupOverviewController)
-  # db.changes(live: true, since: 'now').on "complete", ->
-  #   console.log "CHANGED"
+  entries.all($scope.sheet).then setupOverviewController
