@@ -28,6 +28,15 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
       result += helper.entryDuration(entry)
     , 0
 
+  timeAndMaterial = ->
+    _.reduce $scope.sheetEntries
+    , (result, entry) ->
+      if entry.tm is true
+        duration = helper.entryDuration(entry)
+        result += helper.entryDuration(entry) if duration > 0
+      result += 0
+    , 0
+
   projects = ->
     projectNames = _.uniq(entry.project for entry in $scope.sheetEntries)
     ({name: projectName} for projectName in projectNames)
@@ -36,6 +45,8 @@ angular.module('SheetOverviewController', ['EntryService', 'uuid'])
     $scope.projects = projects()
     $scope.sheet.overtime = $scope.overtimeSum = overallOvertime()
     $scope.hoursSum = overallHours()
+    $scope.sheet.timeAndMaterial = $scope.timeAndMaterial = timeAndMaterial()
+    # console.log $scope.timeAndMaterial
     # TODO: is this update necessary, does it work already and it is legacy? ??
     # sheets.update($scope.sheet)
 

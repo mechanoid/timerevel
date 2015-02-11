@@ -13,13 +13,18 @@ section.segment
         td {{project.name}}
         td {{project | workingHoursForProject: sheetEntries}}
         td
+      tr.summary-row
+        td overall
+        td {{hoursSum}}
+        td  
       tr
+        td(colspan="3")
+      tr.summary-row
         td overtime
         td {{overtimeSum | asOvertime}}
         td
-      tr
-        td overall
-        td {{hoursSum}}
+      tr.summary-row
+        td time and material
+        td {{timeAndMaterial}}
         td
-          
     
