@@ -44,6 +44,7 @@ angular.module('SheetService', ['DbService', 'uuid'])
       db.query({map: map}, {include_docs: true})
 
     update: (item) =>
+      console.log caller
       db.get(item._id)
       .then (sheet) =>
         delete item._rev
